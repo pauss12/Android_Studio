@@ -47,7 +47,6 @@ class SignupActivity : AppCompatActivity(), OnClickListener {
                     Snackbar.make(binding.root, "Las contraseñas son distintas", Snackbar.LENGTH_SHORT).show()
                     return
                 }
-
                 val intent = Intent(applicationContext, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
