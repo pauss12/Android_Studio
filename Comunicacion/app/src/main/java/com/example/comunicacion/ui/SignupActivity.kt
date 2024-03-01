@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
+import android.widget.RadioButton
 import com.google.android.material.snackbar.Snackbar
 import com.example.comunicacion.databinding.ActivitySignupBinding
+import com.example.comunicacion.model.Usuario
 
 class SignupActivity : AppCompatActivity(), OnClickListener {
 
@@ -42,14 +44,37 @@ class SignupActivity : AppCompatActivity(), OnClickListener {
                     }
                 }
 
-                if (binding.editPassword.text.toString() != binding.editPassword2.text.toString())
-                {
-                    Snackbar.make(binding.root, "Las contraseñas son distintas", Snackbar.LENGTH_SHORT).show()
-                    return
+                if (binding.editPassword.text.toString().equals(binding.editPassword2.text.toString())) {
+
+                    //Sacar el dato que esta seleccionado en el spinner
+                    //var perfil: String = binding.spinnerPerfil.adapter.getItem(binding.spinnerPerfil.selectedItemPosition).toString()
+
+                    /*Otra forma* */
+
+                    var perfil: String = binding.spinnerPerfil.selectedItem.toString()
+
+
+                    var radioSeleccionado: RadioButton =
+                        findViewById(binding.radioGroup.checkedRadioButtonId)
+                    val genero = radioSeleccionado.text.toString();
+
+                    val usuario =
+
+                        Usuario(
+                            binding.editNombre.text.toString(),
+                            binding.editCorreo.text.toString(),
+                            binding.editPassword.text.toString(),
+                            genero,
+                            perfil
+                        )
+
+                    val intent = Intent(applicationContext, LoginActivity::class.java)
+                    intent.putExtra("Usuario", usuario)
+                    startActivity(intent)
+                    finish()
                 }
-                val intent = Intent(applicationContext, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
+                Snackbar.make(binding.root, "Las contraseñas son distintas", Snackbar.LENGTH_SHORT).show()
+                return
             }
         }
     }
