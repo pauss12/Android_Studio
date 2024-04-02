@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     private var firstNumberFinal: Double = 0.0
     private var secondNumber: Double = 0.0
 
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -41,6 +41,16 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             button.setOnClickListener(this)
         }
 
+    }
+
+    fun formatearNumero(num: Double): String {
+        return if (num == num.toInt().toDouble()) {
+            // Si el número es un entero, muestra el número sin decimales
+            num.toInt().toString()
+        } else {
+            // Si el número es decimal, muestra el número con decimales
+            num.toString()
+        }
     }
 
     override fun onClick(v: View?) {
@@ -166,6 +176,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                     }else
                         secondNumber = firstNumber
                 }
+
                 binding.textoValor.text = expression.toString() + firstNumber.toString()
             }
 
