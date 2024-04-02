@@ -17,9 +17,14 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     //Tiene lo que se va a ir mostrando en cada momento
     private var expression: StringBuilder = StringBuilder()
 
+    //Booleana para saber si se ha introducido el primer numero
+    private var primerNumeroIntroducido: Boolean = false
+
     private var firstNumber: Double = 0.0
+    private var firstNumberFinal: Double = 0.0
     private var secondNumber: Double = 0.0
 
+    
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -47,34 +52,56 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                 expression.clear()
                 firstNumber = 0.0
                 secondNumber = 0.0
+                primerNumeroIntroducido = false
                 binding.textoValor.text = ""
+            }
+
+            //BOTON COMA -----------------------------
+            R.id.botonComa -> {
+
+                expression.append(firstNumber)
+                expression.append(",")
+
+                firstNumber = 0.0
+                primerNumeroIntroducido = true
+                binding.textoValor.text = expression.toString()
             }
 
             R.id.botonSuma -> {
                 expression.append(firstNumber)
                 expression.append("+")
                 firstNumber = 0.0
+                primerNumeroIntroducido = true
                 binding.textoValor.text = expression.toString()
             }
+
             R.id.botonResta -> {
-                expression.append(firstNumber)  // Append first number to expression
+
+                expression.append(firstNumber)
                 expression.append("-")
-                // Reset firstNumber for next number
+
                 firstNumber = 0.0
+                primerNumeroIntroducido = true
                 binding.textoValor.text = expression.toString()
             }
+
             R.id.botonMultiplicacion -> {
                 expression.append(firstNumber)  // Append first number to expression
                 expression.append("*")
-                // Reset firstNumber for next number
+
                 firstNumber = 0.0
+                primerNumeroIntroducido = true
                 binding.textoValor.text = expression.toString()
             }
             R.id.botonDivision -> {
-                expression.append(firstNumber)  // Append first number to expression
+                expression.append(firstNumber)
                 expression.append("/")
-                // Reset firstNumber for next number
+
                 firstNumber = 0.0
+
+                //Activar booleana de que se ha introducido el primer numero
+                primerNumeroIntroducido = true
+
                 binding.textoValor.text = expression.toString()
             }
 
@@ -84,11 +111,40 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
                     val expressionString = expression.toString()
                     val parts = expressionString.split("(?<=[-+*/])|(?=[-+*/])")
-                    val primerNumero = parts[0].toDouble()
                     println("El valor de expressionString es $expressionString")
                     val operation = expressionString[expressionString.length - 1]
-                    println("El valor de operacion es $operation --- el valor de numero 1 es $primerNumero y el valor del numero 2 es $firstNumber")
+                    println("El valor de operacion es $operation --- el valor de numero 1 es $firstNumberFinal y el valor del numero 2 es $secondNumber")
 
+                    var result: Double = 0.0
+
+                    when (operation) {
+                        '+' -> result = firstNumberFinal + secondNumber
+                        '-' -> result = firstNumberFinal - secondNumber
+                        '*' -> result = firstNumberFinal * secondNumber
+                        '/' -> {
+                            if (secondNumber != 0.0) {
+                                result = firstNumberFinal / secondNumber
+                            } else {
+                                Snackbar.make(
+                                    binding.root,
+                                    "ERROR: División por cero",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        else -> {
+
+                            result = 0.0
+                        }
+                    }
+
+                    binding.textoValor.text = "$expressionString $secondNumber = $result"
+
+                    expression.clear()
+                    firstNumberFinal = 0.0
+                    secondNumber = 0.0
+                    primerNumeroIntroducido = false
 
                 }else {
                     Snackbar.make(
@@ -102,8 +158,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             else -> {
                 val buttonText = (v as Button).text.toString()
                 if (v.id != R.id.botonIgual) {
-                    // Append number to firstNumber before operation
+
                     firstNumber = firstNumber * 10 + buttonText.toDouble()
+                    if (!primerNumeroIntroducido)
+                    {
+                        firstNumberFinal = firstNumber
+                    }else
+                        secondNumber = firstNumber
                 }
                 binding.textoValor.text = expression.toString() + firstNumber.toString()
             }
