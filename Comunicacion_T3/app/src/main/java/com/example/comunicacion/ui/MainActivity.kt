@@ -3,6 +3,7 @@ package com.example.comunicacion.ui
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.AbsSpinner
@@ -14,18 +15,27 @@ import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.Orientation
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.comunicacion.R
 import com.example.comunicacion.adapters.AdaptadorModelo
+import com.example.comunicacion.adapters.AdaptadorProducto
 import com.example.comunicacion.data.DataSet
 import com.example.comunicacion.databinding.ActivityLoginBinding
 import com.example.comunicacion.databinding.ActivityMainBinding
 import com.example.comunicacion.model.Marca
+import com.example.comunicacion.model.Producto
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import org.json.JSONArray
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adaptadorModelo: AdaptadorModelo
+    //private lateinit var adaptadorModelo: AdaptadorModelo
+    private lateinit var adaptadorProducto: AdaptadorProducto
     private lateinit var nombre: String
     private lateinit var adapterSpinner: ArrayAdapter<Marca>
 
@@ -35,12 +45,50 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         instacias()
+
+        peticionJSON()
+
         persoAdaptadores()
 
         this.nombre = intent.getStringExtra("correo")!!
         binding.textoSaludo.text = nombre
         acciones()
 
+    }
+
+    private fun peticionJSON() {
+
+        //Crear la peticion
+        val url = "https://dummyjson.com/products"
+
+        //No hay que ponerle el nombre de la funcion, por eso se ponen las llaves directamente
+        val peticion: JsonObjectRequest = JsonObjectRequest(url, {
+
+            val productos: JSONArray = it.getJSONArray("products")
+
+            for ( i in 0..< productos.length())
+            {
+                val producto: JSONObject = productos.getJSONObject(i)
+
+                /*val id = producto.getInt("id")
+                val title = producto.getString("title")
+                val description = producto.getString("description")
+                val thumbnail = producto.getString("thumbnail")
+                val productoOBJ: Producto = (id, title, description, thumbnail, category, price)*/
+
+                val productoOBJ: Producto = Gson().fromJson(producto.toString(), Producto::class.java)
+
+                adaptadorProducto.addProducto(productoOBJ)
+
+                Log.v("dats", "${productoOBJ.id} ${productoOBJ.title}")
+            }
+
+        }, {
+            Log.v("dats", "Error de conexion")
+        })
+
+        //Lanzarla
+        Volley.newRequestQueue(applicationContext).add(peticion)
     }
 
     fun acciones() {
@@ -56,7 +104,7 @@ class MainActivity : AppCompatActivity() {
 
                 // filtrar la lista -> DATASET OK
                 // cambiar la lista -> ADAPTADOR
-                adaptadorModelo.cambiarLista(DataSet.getAllModelos(selecccion.nombre))
+                //adaptadorModelo.cambiarLista(DataSet.getAllModelos(selecccion.nombre))
 
 
                 Snackbar.make(
@@ -80,7 +128,9 @@ class MainActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_item,
             DataSet.getAllMarcas()
         )
-        adaptadorModelo = AdaptadorModelo(DataSet.getAllModelos("Mercedes"), this)
+        //adaptadorModelo = AdaptadorModelo(DataSet.getAllModelos("Mercedes"), this)
+
+        adaptadorProducto = AdaptadorProducto(this)
     }
 
 
@@ -90,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         // muestra el desplegable de forma visible
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        binding.recyclerModelos.adapter = adaptadorModelo
+        binding.recyclerModelos.adapter = adaptadorProducto
         binding.recyclerModelos.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 

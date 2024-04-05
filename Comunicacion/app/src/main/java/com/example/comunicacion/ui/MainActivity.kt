@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adaptadorModelo: AdaptadorModelo
     private lateinit var nombre: String
     private lateinit var adapterSpinner: ArrayAdapter<Marca>
 
