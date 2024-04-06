@@ -20,8 +20,6 @@ class AdaptadorProducto(var context: Context) :  RecyclerView.Adapter<AdaptadorP
         // definir cada uno de los elementos de la fila
         var imagen: ImageView = item.findViewById(R.id.imagenFila)
         var titulo: TextView = item.findViewById(R.id.tituloFila)
-        var subTitulo: TextView = item.findViewById(R.id.subtituloFila)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
@@ -39,12 +37,22 @@ class AdaptadorProducto(var context: Context) :  RecyclerView.Adapter<AdaptadorP
         return lista.size;
     }
 
-    override fun onBindViewHolder(holder: MyHolder, position: Int) {
+    /*override fun onBindViewHolder(holder: MyHolder, position: Int) {
 
         // asociar el holder (XML) con datos de la LISTA
         val elemento = lista[position]
         holder.titulo.text = elemento.title
         holder.subTitulo.text = elemento.price.toString()
+
+        Glide.with(context).load(elemento.thumbnail).into(holder.imagen)
+
+    }*/
+
+    override fun onBindViewHolder(holder: MyHolder, position: Int) {
+
+        // asociar el holder (XML) con datos de la LISTA
+        val elemento = lista[position]
+        holder.titulo.text = elemento.name
 
         Glide.with(context).load(elemento.thumbnail).into(holder.imagen)
 
