@@ -8,6 +8,7 @@ import android.view.View.OnClickListener
 import android.widget.Button
 import com.example.practicacalculadora.databinding.ActivityMainBinding
 import java.lang.StringBuilder
+import java.util.Stack
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity(), OnClickListener {
@@ -15,17 +16,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     private lateinit var binding: ActivityMainBinding
 
     private var historial: StringBuilder = StringBuilder()
+    private var buffer: StringBuilder = StringBuilder()
 
     private lateinit var operacion: String
 
     private var numero: Double = 0.0
 
-    //Botones para saber que simbolos se han pulsado
-    private var botonMultiplicacion: Boolean = false
-    private var botonDivision: Boolean = false
-    private var botonResta: Boolean = false
-    private var botonSuma: Boolean = false
-
+    private var lastOperation: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -39,6 +36,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             binding.botonOcho, binding.botonNueve, binding.botonSuma, binding.botonResta,
             binding.botonMultiplicacion, binding.botonDivision, binding.botonPunto, binding.botonIgual
         )
+
         for (button in buttons) {
             button.setOnClickListener(this)
         }
@@ -59,32 +57,28 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                 binding.textoValorGuardado.text = ""
 
                 historial.clear()
+                buffer.clear()
 
-                botonDivision = false
-                botonResta = false
-                botonMultiplicacion = false
-                botonSuma = false
+                lastOperation = null
 
             }
 
             //BOTON COMA -----------------------------
             R.id.botonPunto -> {
                 operacion = "."
-                if (!historial.toString().contains(".")) {
-                    historial.append(" . ")
-                }
+                historial.append(".")
+                buffer.append(".")
+
             }
 
             //BOTON SUMA ---------------------------
             R.id.botonSuma -> {
 
-                binding.textoValorGuardado.append(" + ")
-
-                historial.append("+")
+                historial.append(" + ")
 
                 operacion = "+"
 
-                botonSuma = true
+                buffer.clear()
 
                 numero = 0.0
             }
@@ -94,11 +88,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
                 operacion = "-"
 
-                binding.textoValorGuardado.append(" - ")
+                historial.append(" - ")
 
-                historial.append("-")
-
-                botonResta = true
+                buffer.clear()
 
                 numero = 0.0
             }
@@ -108,11 +100,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
                 operacion = "*"
 
-                binding.textoValorGuardado.append(" * ")
-
                 historial.append(" * ")
 
-                botonMultiplicacion = true
+                buffer.clear()
 
                 numero = 0.0
             }
@@ -122,11 +112,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
                 operacion = "/"
 
-                binding.textoValorGuardado.append(" / ")
-
                 historial.append(" / ")
 
-                botonDivision = true
+                buffer.clear()
 
                 numero = 0.0
             }
@@ -135,11 +123,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
                 if (historial.isNotEmpty()) {
 
-                    var result: Double = 0.0
+                    val result = calculate(historial)
 
-                    println("El valor del historial es $historial")
-
-                    numero = 0.0
+                    if (result.isWholeNumber()) {
+                        binding.textoValor.text = result.toInt().toString()
+                    } else {
+                        binding.textoValor.text = result.toString()
+                    }
 
                 }
 
@@ -150,14 +140,88 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                 val numberString = (v as Button).text.toString()
 
                 historial.append(numberString)
+                buffer.append(numberString)
+
+                binding.textoValor.text = buffer.toString()
 
                 binding.textoValorGuardado.text = historial
 
-                //binding.textoValor.text = numero.toString()
 
             }
         }
     }
+
+    private fun Double.isWholeNumber(): Boolean {
+        return this % 1.0 == 0.0 // Check if remainder after division by 1 is 0
+    }
+
+
+    fun calculate(expression: StringBuilder): Double {
+
+        val operators: Stack<Char> = Stack<Char>()
+        val results: Stack<Double> = Stack<Double>()
+
+        val tokens = expression.split(" ") // Divide en tokens separados por espacios
+
+        for (token in tokens) {
+            when (token) {
+                // Números
+                in "0".."9" -> results.add(token.toDouble())
+
+                // Operadores
+                "+", "-", "*", "/" -> {
+                    while (!operators.isEmpty() && precedence(operators.peek()) >= precedence(token[0])) {
+                        val operand2 = results.pop()
+                        val operand1 = results.pop()
+                        val operator = operators.pop()
+                        results.add(performOperation(operator, operand1, operand2))
+                    }
+                    operators.push(token[0])
+                }
+
+                else -> {
+
+                    Log.e("Error", "Token no válido: $token")
+                }
+            }
+        }
+
+        while (!operators.isEmpty()) {
+            val operand2 = results.pop()
+            val operand1 = results.pop()
+            val operator = operators.pop()
+            results.add(performOperation(operator, operand1, operand2))
+        }
+
+        return results.lastOrNull() ?: Double.NaN
+    }
+
+    fun precedence(operator: Char): Int {
+        return when (operator) {
+            '+', '-' -> 1
+            '*', '/' -> 2
+            else -> -1
+        }
+    }
+
+    fun performOperation(operator: Char, operand1: Double, operand2: Double): Double {
+        return when (operator) {
+            '+' -> operand1 + operand2
+            '-' -> operand1 - operand2
+            '*' -> operand1 * operand2
+            '/' -> {
+                if (operand2 == 0.0) {
+
+                    Log.e("Error", "División por cero!")
+                    Double.NaN
+                } else {
+                    operand1 / operand2
+                }
+            }
+            else -> Double.NaN
+        }
+    }
+
 
 
 }
