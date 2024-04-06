@@ -54,7 +54,7 @@ class AdaptadorProducto(var context: Context) :  RecyclerView.Adapter<AdaptadorP
         val elemento = lista[position]
         holder.titulo.text = elemento.name
 
-        Glide.with(context).load(elemento.thumbnail).into(holder.imagen)
+        Glide.with(context).load(elemento.image).into(holder.imagen)
 
     }
 

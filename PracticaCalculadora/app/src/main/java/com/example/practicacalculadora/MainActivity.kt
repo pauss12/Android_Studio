@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         setContentView(binding.root)
 
         val buttons = listOf(
-            binding.botonAC, binding.botonUno, binding.botonDos, binding.botonTres,
+            binding.botonAC, binding.botonCero, binding.botonUno, binding.botonDos, binding.botonTres,
             binding.botonCuatro, binding.botonCinco, binding.botonSeis, binding.botonSiete,
             binding.botonOcho, binding.botonNueve, binding.botonSuma, binding.botonResta,
             binding.botonMultiplicacion, binding.botonDivision, binding.botonPunto, binding.botonIgual
@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                 secondNumber = 0.0
                 operacion = ""
                 binding.textoValor.text = ""
+                buffer.clear()
 
             }
 
@@ -79,20 +80,64 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             R.id.botonResta -> {
                 operacion = "-"
                 primerNumeroIntroducido = true
+                buffer.clear()
             }
 
             //BOTON MULTIPLICACION -----------------
             R.id.botonMultiplicacion -> {
                 operacion = "*"
                 primerNumeroIntroducido = true
+                buffer.clear()
             }
 
             //BOTON  DIVISION-----------------
             R.id.botonDivision -> {
                 operacion = "/"
                 primerNumeroIntroducido = true
+                buffer.clear()
             }
 
+            R.id.botonIgual -> {
+
+                if (buffer.isNotEmpty()) {
+
+                    println("El valor de expressionString es $buffer")
+                    println("El valor de --operacionn--- es $operacion")
+
+                    var result: Double = 0.0
+
+                    when (operacion) {
+                        "+" -> result = firstNumber + secondNumber
+                        "-" -> result = firstNumber - secondNumber
+                        "*" -> result = firstNumber * secondNumber
+                        "/" -> {
+                            if (secondNumber != 0.0) {
+                                result = firstNumber / secondNumber
+                            } else {
+                                Snackbar.make(
+                                    binding.root,
+                                    "ERROR: División por cero",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        else -> {
+
+                            result = 0.0
+                        }
+                    }
+
+                    secondNumber = 0.0
+                    firstNumber = 0.0
+                    primerNumeroIntroducido = false
+                    buffer.clear()
+
+                    binding.textoValor.text = result.toString()
+
+                }
+
+            }
 
             else -> {
 

@@ -29,14 +29,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.5"
             android:text="TITULO" />
-        <TextView
-            android:textSize="20sp"
-            android:gravity="center"
-            android:id="@+id/subtituloFila"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:text="TITULO" />
+
 
     </LinearLayout>
 
