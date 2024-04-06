@@ -13,9 +13,10 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/tam"
-            android:text="MI CALCULADORA"
-            android:textSize="@dimen/tam_titulo"
+            android:layout_height="129dp"
+            android:id="@+id/textoValorGuardado"
+            android:text=""
+            android:textSize="@dimen/tam_valor"
             android:gravity="center" />
 
         <TextView

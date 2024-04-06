@@ -14,17 +14,17 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     private lateinit var binding: ActivityMainBinding
 
-    //Tiene lo que se va a ir mostrando en cada momento
-    private var buffer: StringBuilder = StringBuilder()
+    private var historial: StringBuilder = StringBuilder()
 
-    //Booleana para saber si se ha introducido el primer numero
-    private var primerNumeroIntroducido: Boolean = false
-
-    private var firstNumber: Double = 0.0
     private lateinit var operacion: String
-    private var secondNumber: Double = 0.0
 
     private var numero: Double = 0.0
+
+    //Botones para saber que simbolos se han pulsado
+    private var botonMultiplicacion: Boolean = false
+    private var botonDivision: Boolean = false
+    private var botonResta: Boolean = false
+    private var botonSuma: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,93 +47,99 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     override fun onClick(v: View?) {
 
-        println(primerNumeroIntroducido)
-
         when (v!!.id) {
 
             R.id.botonAC -> {
 
-                firstNumber = 0.0
-                secondNumber = 0.0
+                numero = 0.0
+
                 operacion = ""
                 binding.textoValor.text = ""
-                buffer.clear()
+
+                binding.textoValorGuardado.text = ""
+
+                historial.clear()
+
+                botonDivision = false
+                botonResta = false
+                botonMultiplicacion = false
+                botonSuma = false
 
             }
 
             //BOTON COMA -----------------------------
             R.id.botonPunto -> {
                 operacion = "."
-                if (!buffer.toString().contains(".")) {
-                    buffer.append(".")
+                if (!historial.toString().contains(".")) {
+                    historial.append(" . ")
                 }
             }
 
             //BOTON SUMA ---------------------------
             R.id.botonSuma -> {
+
+                binding.textoValorGuardado.append(" + ")
+
+                historial.append("+")
+
                 operacion = "+"
-                primerNumeroIntroducido = true
-                buffer.clear()
+
+                botonSuma = true
+
+                numero = 0.0
             }
 
             //BOTON RESTA ---------------------------
             R.id.botonResta -> {
+
                 operacion = "-"
-                primerNumeroIntroducido = true
-                buffer.clear()
+
+                binding.textoValorGuardado.append(" - ")
+
+                historial.append("-")
+
+                botonResta = true
+
+                numero = 0.0
             }
 
             //BOTON MULTIPLICACION -----------------
             R.id.botonMultiplicacion -> {
+
                 operacion = "*"
-                primerNumeroIntroducido = true
-                buffer.clear()
+
+                binding.textoValorGuardado.append(" * ")
+
+                historial.append(" * ")
+
+                botonMultiplicacion = true
+
+                numero = 0.0
             }
 
             //BOTON  DIVISION-----------------
             R.id.botonDivision -> {
+
                 operacion = "/"
-                primerNumeroIntroducido = true
-                buffer.clear()
+
+                binding.textoValorGuardado.append(" / ")
+
+                historial.append(" / ")
+
+                botonDivision = true
+
+                numero = 0.0
             }
 
             R.id.botonIgual -> {
 
-                if (buffer.isNotEmpty()) {
-
-                    println("El valor de expressionString es $buffer")
-                    println("El valor de --operacionn--- es $operacion")
+                if (historial.isNotEmpty()) {
 
                     var result: Double = 0.0
 
-                    when (operacion) {
-                        "+" -> result = firstNumber + secondNumber
-                        "-" -> result = firstNumber - secondNumber
-                        "*" -> result = firstNumber * secondNumber
-                        "/" -> {
-                            if (secondNumber != 0.0) {
-                                result = firstNumber / secondNumber
-                            } else {
-                                Snackbar.make(
-                                    binding.root,
-                                    "ERROR: División por cero",
-                                    Snackbar.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
+                    println("El valor del historial es $historial")
 
-                        else -> {
-
-                            result = 0.0
-                        }
-                    }
-
-                    secondNumber = 0.0
-                    firstNumber = 0.0
-                    primerNumeroIntroducido = false
-                    buffer.clear()
-
-                    binding.textoValor.text = result.toString()
+                    numero = 0.0
 
                 }
 
@@ -141,30 +147,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
             else -> {
 
-                if (!primerNumeroIntroducido)
-                {
-                    val numberString = (v as Button).text.toString()
+                val numberString = (v as Button).text.toString()
 
-                    //println("EL valor de numberString es $numberString")
-                    buffer.append(numberString)
-                    firstNumber = buffer.toString().toDouble()
-                    println("El valor de buffer es $firstNumber")
+                historial.append(numberString)
 
-                }
-                else{
+                binding.textoValorGuardado.text = historial
 
-                    val numberString = (v as Button).text.toString()
-
-                    //println("EL valor de numberString es $numberString")
-                    buffer.append(numberString)
-                    secondNumber = buffer.toString().toDouble()
-
-                }
-
-                println("El valor de buffer 1 es $firstNumber")
-                println("El valor de buffer 2 es $secondNumber")
-                binding.textoValor.text = buffer.toString()
-
+                //binding.textoValor.text = numero.toString()
 
             }
         }
