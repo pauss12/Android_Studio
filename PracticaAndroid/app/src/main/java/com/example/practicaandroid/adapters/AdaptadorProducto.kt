@@ -1,7 +1,6 @@
 package com.example.practicaandroid.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.practicaandroid.R
-import com.example.practicaandroid.model.Modelo
 import com.example.practicaandroid.model.Producto
 
 
@@ -27,6 +25,7 @@ class AdaptadorProducto(var context: Context) :  RecyclerView.Adapter<AdaptadorP
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
+
         // creara la plantilla asociada
         val vista: View = LayoutInflater.from(context).inflate(
             R.layout.item_modelo,
@@ -47,14 +46,8 @@ class AdaptadorProducto(var context: Context) :  RecyclerView.Adapter<AdaptadorP
         holder.titulo.text = elemento.title
         holder.subTitulo.text = elemento.price.toString()
 
-        Glide.with(context).load(elemento.thumbnail).placeholder(R.drawable.vw).into(holder.imagen)
+        Glide.with(context).load(elemento.thumbnail).into(holder.imagen)
 
-        //holder.imagen.setImageResource(elemento.imagen)
-        /*holder.imagen.setOnClickListener {
-            /*val intent: Intent = Intent(context,)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(intent)*/
-        }*/
     }
 
     fun addProducto(x: Producto)
@@ -62,10 +55,5 @@ class AdaptadorProducto(var context: Context) :  RecyclerView.Adapter<AdaptadorP
         lista.add(x)
         notifyItemInserted(lista.size - 1)
     }
-
-    /*fun cambiarLista(lista: ArrayList<Modelo>){
-        this.lista = lista;
-        notifyDataSetChanged()
-    }*/
 
 }

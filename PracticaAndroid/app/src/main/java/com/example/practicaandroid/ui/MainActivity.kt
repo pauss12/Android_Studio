@@ -1,21 +1,14 @@
 package com.example.practicaandroid.ui
 
-import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.practicaandroid.adapters.AdaptadorProducto
 import com.example.practicaandroid.databinding.ActivityMainBinding
-import com.example.practicaandroid.model.Marca
 import com.example.practicaandroid.model.Producto
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
