@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.practicaandroid.adapters.AdaptadorProducto
-import com.example.practicaandroid.data.DataSet
 import com.example.practicaandroid.databinding.ActivityMainBinding
 import com.example.practicaandroid.model.Marca
 import com.example.practicaandroid.model.Producto
@@ -26,23 +25,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adaptadorProducto: AdaptadorProducto
     private lateinit var nombre: String
-    private lateinit var adapterSpinner: ArrayAdapter<Marca>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         instacias()
 
-        peticionJSON()
-
         persoAdaptadores()
+
+        peticionJSON()
 
         this.nombre = intent.getStringExtra("correo")!!
         binding.textoSaludo.text = nombre
 
-        acciones()
 
     }
 
@@ -75,68 +74,20 @@ class MainActivity : AppCompatActivity() {
         Volley.newRequestQueue(applicationContext).add(peticion)
     }
 
-    fun acciones() {
-        binding.spinnerSeleccion.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-
-                val selecccion: Marca = parent!!.adapter.getItem(position) as Marca
-
-                // filtrar la lista -> DATASET OK
-                // cambiar la lista -> ADAPTADOR
-                //adaptadorModelo.cambiarLista(DataSet.getAllModelos(selecccion.nombre))
-
-
-                Snackbar.make(
-                    binding.root,
-                    "${selecccion.nombre} ${selecccion.calidad}",
-                    Snackbar.LENGTH_SHORT
-                ).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-        }
-    }
-
     fun instacias() {
-        // crea la parte de datos del spinner
-        adapterSpinner = ArrayAdapter(
-            applicationContext,
-            android.R.layout.simple_spinner_item,
-            DataSet.getAllMarcas()
-        )
-        //adaptadorModelo = AdaptadorModelo(DataSet.getAllModelos("Mercedes"), this)
 
         adaptadorProducto = AdaptadorProducto(this)
+
     }
 
 
     fun persoAdaptadores() {
-        // junta parte grafica con parte logica
-        binding.spinnerSeleccion.adapter = adapterSpinner;
-        // muestra el desplegable de forma visible
-        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         binding.recyclerModelos.adapter = adaptadorProducto
+
         binding.recyclerModelos.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            binding.recyclerModelos.layoutManager =
-                GridLayoutManager(this, 2)
-        }
-
-        //GridLayoutManager(this,2)
-
-        //LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
 
 

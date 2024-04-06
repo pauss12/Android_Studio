@@ -145,7 +145,6 @@ class MainActivity : AppCompatActivity() {
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            binding.recyclerModelos.layoutManager =
                 GridLayoutManager(this, 2)
         }
 
