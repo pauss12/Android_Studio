@@ -17,13 +17,25 @@ class DetallesProductoActivity : AppCompatActivity() {
 
         val producto = intent.getSerializableExtra("producto") as Producto
 
-        if (producto != null) {
+        binding.titulo.text = producto.name
 
-            binding.titulo.text = producto.name
-            Glide.with(this).load(producto.image).into(binding.imagen)
-
-        } else {
-
+        val ingredientList = StringBuilder()
+        ingredientList.append("Ingredientes: \n\n")
+        for (ingredient in producto.ingredients) {
+            ingredientList.append(" • $ingredient\n")  // Add bullet point and newline
         }
+
+        binding.textoIngredientes.text = ingredientList.toString()
+
+        val listaPasos = StringBuilder()
+        listaPasos.append("Pasos: \n\n")
+        for (paso in producto.instructions) {
+            listaPasos.append(" • $paso\n")
+        }
+
+        binding.textoPasos.text = listaPasos.toString()
+
+        Glide.with(this).load(producto.image).into(binding.imagen)
+
     }
 }

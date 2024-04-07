@@ -24,18 +24,28 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/textoFila"
+        app:layout_constraintBottom_toTopOf="@id/textoIngredientes"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titulo" />
 
     <TextView
-        android:id="@+id/textoFila"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="Texto de información"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/textoIngredientes"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
+        android:text=""
         app:layout_constraintTop_toBottomOf="@id/imagen" />
+
+    <TextView
+        android:id="@+id/textoPasos"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@id/textoIngredientes" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
