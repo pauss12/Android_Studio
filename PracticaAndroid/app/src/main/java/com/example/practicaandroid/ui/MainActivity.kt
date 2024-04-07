@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         persoAdaptadores()
 
         this.nombre = intent.getStringExtra("correo")!!
-        binding.textoSaludo.text = nombre
+        binding.textoSaludo.text = "Bienvenido $nombre ;) "
 
 
     }
