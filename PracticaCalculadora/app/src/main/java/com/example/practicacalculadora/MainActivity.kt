@@ -30,17 +30,35 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (savedInstanceState != null) {
+            historial = StringBuilder(savedInstanceState.getString("historial", ""))
+            buffer = StringBuilder(savedInstanceState.getString("buffer", ""))
+
+        }
+
+        binding.textoValorGuardado.text = historial
+        binding.textoValor.text = buffer
+
         val buttons = listOf(
             binding.botonAC, binding.botonCero, binding.botonUno, binding.botonDos, binding.botonTres,
             binding.botonCuatro, binding.botonCinco, binding.botonSeis, binding.botonSiete,
             binding.botonOcho, binding.botonNueve, binding.botonSuma, binding.botonResta,
-            binding.botonMultiplicacion, binding.botonDivision, binding.botonPunto, binding.botonIgual
+            binding.botonMultiplicacion, binding.botonDivision, binding.botonPunto, binding.botonIgual,
+            binding.botonCuadrado, binding.botonParentesisAbiertos, binding.botonParentesisAbiertos
         )
 
         for (button in buttons) {
-            button.setOnClickListener(this)
+            button?.setOnClickListener(this)
         }
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+
+        super.onSaveInstanceState(outState)
+
+        outState.putString("historial", historial.toString())
+        outState.putString("buffer", buffer.toString())
     }
 
     override fun onClick(v: View?) {
