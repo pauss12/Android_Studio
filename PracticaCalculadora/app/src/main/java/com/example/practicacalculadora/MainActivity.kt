@@ -17,12 +17,11 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     private var historial: StringBuilder = StringBuilder()
     private var buffer: StringBuilder = StringBuilder()
-
     private lateinit var operacion: String
-
     private var numero: Double = 0.0
-
     private var lastOperation: String? = null
+
+    private var result: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -31,20 +30,33 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         setContentView(binding.root)
 
         if (savedInstanceState != null) {
+
             historial = StringBuilder(savedInstanceState.getString("historial", ""))
+
             buffer = StringBuilder(savedInstanceState.getString("buffer", ""))
+
+            result = savedInstanceState.getDouble("result", 0.0)  // Recupera result
+
+            println(result)
+
+            // Aplica la condición para mostrar el resultado
+            if (result.isWholeNumber()) {
+                binding.textoValor.text = result.toInt().toString()
+            } else {
+                binding.textoValor.text = result.toString()
+            }
 
         }
 
         binding.textoValorGuardado.text = historial
-        binding.textoValor.text = buffer
+        //binding.textoValor.text = buffer
 
         val buttons = listOf(
             binding.botonAC, binding.botonCero, binding.botonUno, binding.botonDos, binding.botonTres,
             binding.botonCuatro, binding.botonCinco, binding.botonSeis, binding.botonSiete,
             binding.botonOcho, binding.botonNueve, binding.botonSuma, binding.botonResta,
             binding.botonMultiplicacion, binding.botonDivision, binding.botonPunto, binding.botonIgual,
-            binding.botonCuadrado, binding.botonParentesisAbiertos, binding.botonParentesisAbiertos
+            binding.botonParentesisAbiertos, binding.botonParentesisCierre
         )
 
         for (button in buttons) {
@@ -58,7 +70,18 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         super.onSaveInstanceState(outState)
 
         outState.putString("historial", historial.toString())
-        outState.putString("buffer", buffer.toString())
+
+        if (result == 0.0)
+        {
+            outState.putString("buffer", buffer.toString())
+        }
+        else
+        {
+
+            outState.putString("buffer",result.toString())
+        }
+
+        outState.putDouble("result", result)
     }
 
     override fun onClick(v: View?) {
@@ -71,12 +94,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
                 operacion = ""
                 binding.textoValor.text = ""
-
+                result = 0.0
                 binding.textoValorGuardado.text = ""
-
                 historial.clear()
                 buffer.clear()
-
                 lastOperation = null
 
             }
@@ -93,23 +114,32 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             R.id.botonSuma -> {
 
                 historial.append(" + ")
-
                 operacion = "+"
-
                 buffer.clear()
-
+                binding.textoValorGuardado.text = historial
                 numero = 0.0
             }
+
+            //BOTON PARA PONER  PARENTESIS -----------------------------
+            R.id.botonParentesisCierre -> {
+                historial.append(")")
+                binding.textoValorGuardado.text = historial
+
+            }
+
+            R.id.botonParentesisAbiertos -> {
+                historial.append("(")
+                binding.textoValorGuardado.text = historial
+            }
+
 
             //BOTON RESTA ---------------------------
             R.id.botonResta -> {
 
                 operacion = "-"
-
                 historial.append(" - ")
-
                 buffer.clear()
-
+                binding.textoValorGuardado.text = historial
                 numero = 0.0
             }
 
@@ -117,11 +147,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             R.id.botonMultiplicacion -> {
 
                 operacion = "*"
-
                 historial.append(" * ")
-
                 buffer.clear()
-
+                binding.textoValorGuardado.text = historial
                 numero = 0.0
             }
 
@@ -129,11 +157,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             R.id.botonDivision -> {
 
                 operacion = "/"
-
                 historial.append(" / ")
-
                 buffer.clear()
-
+                binding.textoValorGuardado.text = historial
                 numero = 0.0
             }
 
@@ -141,7 +167,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
                 if (historial.isNotEmpty()) {
 
-                    val result = calculate(historial)
+                    result = calculate(historial)
 
                     if (result.isWholeNumber()) {
                         binding.textoValor.text = result.toInt().toString()
