@@ -26,11 +26,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        instacias()
+        peticionJSON()
+
+        instancias()
 
         persoAdaptadores()
-
-        peticionJSON()
 
         this.nombre = intent.getStringExtra("correo")!!
         binding.textoSaludo.text = nombre
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
                 adaptadorProducto.addProducto(recipeOBJ)
 
-                Log.v("dats", "${recipeOBJ.id} ${recipeOBJ.name}")
+                //Log.v("dats", "${recipeOBJ.id} ${recipeOBJ.name}")
             }
 
         }, {
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         Volley.newRequestQueue(applicationContext).add(peticion)
     }
 
-    fun instacias() {
+    fun instancias() {
 
         adaptadorProducto = AdaptadorProducto(this)
 
