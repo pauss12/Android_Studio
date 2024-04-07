@@ -34,6 +34,18 @@
             app:layout_constraintTop_toBottomOf="@id/titulo" />
 
         <TextView
+            android:id="@+id/rating"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text=""
+            app:layout_constraintTop_toBottomOf="@id/imagen"
+
+        />
+
+        <TextView
             android:id="@+id/textoIngredientes"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
@@ -41,7 +53,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             android:text=""
-            app:layout_constraintTop_toBottomOf="@id/imagen" />
+            app:layout_constraintTop_toBottomOf="@id/rating" />
 
         <TextView
             android:id="@+id/textoPasos"
