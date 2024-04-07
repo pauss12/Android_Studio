@@ -38,43 +38,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    /*private fun peticionJSON() {
-
-        //Crear la peticion
-        val url = "https://dummyjson.com/products"
-
-        //https://dummyjson.com/recipes
-
-        //No hay que ponerle el nombre de la funcion, por eso se ponen las llaves directamente
-        val peticion: JsonObjectRequest = JsonObjectRequest(url, {
-
-            val productos: JSONArray = it.getJSONArray("products")
-
-            for ( i in 0..< productos.length())
-            {
-                val producto: JSONObject = productos.getJSONObject(i)
-
-                val productoOBJ: Producto = Gson().fromJson(producto.toString(), Producto::class.java)
-
-                adaptadorProducto.addProducto(productoOBJ)
-
-                Log.v("dats", "${productoOBJ.id} ${productoOBJ.title}")
-            }
-
-        }, {
-            Log.v("dats", "Error de conexion")
-        })
-
-        //Lanzarla
-        Volley.newRequestQueue(applicationContext).add(peticion)
-    }*/
-
     private fun peticionJSON() {
 
-        //Crear la peticion
         val url = "https://dummyjson.com/recipes"
 
-        //No hay que ponerle el nombre de la funcion, por eso se ponen las llaves directamente
         val peticion: JsonObjectRequest = JsonObjectRequest(url, {
 
             val recetas: JSONArray = it.getJSONArray("recipes")
@@ -113,7 +80,5 @@ class MainActivity : AppCompatActivity() {
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
     }
-
-
 
 }
