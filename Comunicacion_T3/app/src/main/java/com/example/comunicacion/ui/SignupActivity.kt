@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.RadioButton
-import com.example.comunicacion.R
 import com.example.comunicacion.databinding.ActivitySignupBinding
 import com.example.comunicacion.model.Usuario
 import com.google.android.material.snackbar.Snackbar
