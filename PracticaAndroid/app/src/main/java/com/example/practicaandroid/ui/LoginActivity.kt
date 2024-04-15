@@ -30,11 +30,14 @@ class LoginActivity : AppCompatActivity(), OnClickListener {
         }
 
         binding.botonLogin.setOnClickListener(this)
+        binding.botonSignUp.setOnClickListener(this)
 
     }
 
     override fun onClick(v: View?) {
         when (v!!.id) {
+
+            //LOGIN
             binding.botonLogin.id -> {
                 if (!binding.editCorreo.text.toString().isEmpty() &&
                     !binding.editPass.text.toString().isEmpty()
@@ -48,6 +51,15 @@ class LoginActivity : AppCompatActivity(), OnClickListener {
 
                 }
 
+            }
+
+            //REGISTRO
+            binding.botonSignUp.id->{
+
+                //Me redirige a la pagina de registro
+                val intent = Intent(applicationContext, SignupActivity::class.java)
+                startActivity(intent)
+                finish()
             }
 
         }
