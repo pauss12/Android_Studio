@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "253297099625",
+    "project_id": "pmz-utad2024",
+    "storage_bucket": "pmz-utad2024.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253297099625:android:4c6e3860895343ff8e33f8",
+        "android_client_info": {
+          "package_name": "com.example.comunicacion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxfl6vwDJ4K3sXfhxUd6iJZLnLkxEa9yg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

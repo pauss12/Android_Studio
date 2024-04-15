@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     //private lateinit var adaptadorModelo: AdaptadorModelo
     private lateinit var adaptadorProducto: AdaptadorProducto
+    private lateinit var uidCurrentUser: String
     private lateinit var nombre: String
     private lateinit var adapterSpinner: ArrayAdapter<Marca>
 
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         persoAdaptadores()
 
         this.nombre = intent.getStringExtra("correo")!!
+        this.uidCurrentUser = intent.getStringExtra("uid")!!
         binding.textoSaludo.text = nombre
         acciones()
 

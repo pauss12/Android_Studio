@@ -8,14 +8,18 @@ import com.example.comunicacion.R
 import com.example.comunicacion.databinding.ActivitySignupBinding
 import com.example.comunicacion.model.Usuario
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 
 class SignupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignupBinding
+    private lateinit var authFirebase: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        instancias()
 
         binding.botonRegistro.setOnClickListener {
 
@@ -46,9 +50,23 @@ class SignupActivity : AppCompatActivity() {
                         perfil
 
                     )
-                val intent = Intent(this, LoginActivity::class.java)
-                intent.putExtra("usuario",usuario)
-                startActivity(intent)
+
+                authFirebase.createUserWithEmailAndPassword(usuario.correo, usuario.pass)
+                    .addOnCompleteListener {
+                        if(it.isSuccessful){
+                            Snackbar.make(binding.root,"Usuario registrado con exito", Snackbar.LENGTH_SHORT)
+                                .setAction("ir a login"){
+                                    val intent = Intent(this, LoginActivity::class.java)
+                                    intent.putExtra("usuario",usuario)
+                                    startActivity(intent)
+                                }
+                                .show()
+                        } else {
+                            Snackbar.make(binding.root,"Fallo en el proceso", Snackbar.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+
             } else {
                 // si todos los datos estan completos pero las pass no coincida -> aviso
                 // los datos no estan completos pero las pass no coincida -> aviso
@@ -57,4 +75,9 @@ class SignupActivity : AppCompatActivity() {
 
         }
     }
+
+    private fun instancias() {
+        authFirebase = FirebaseAuth.getInstance()
+    }
+
 }

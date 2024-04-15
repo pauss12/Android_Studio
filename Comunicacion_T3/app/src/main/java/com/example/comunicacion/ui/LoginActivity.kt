@@ -7,17 +7,25 @@ import android.view.View
 import android.view.View.OnClickListener
 import com.example.comunicacion.databinding.ActivityLoginBinding
 import com.example.comunicacion.model.Usuario
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class LoginActivity : AppCompatActivity(), OnClickListener {
 
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var authFirebase: FirebaseAuth
+    private var userAuth: FirebaseUser? = null
     private var usuario: Usuario? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        instancias()
 
 
         if (intent.getSerializableExtra("usuario")!=null){
@@ -30,22 +38,62 @@ class LoginActivity : AppCompatActivity(), OnClickListener {
         binding.botonSignUp.setOnClickListener(this)
     }
 
+    fun instancias()
+    {
+        //Instanciar el servicio de autenticacion de firebase
+        authFirebase = FirebaseAuth.getInstance()
+
+
+    }
+
     override fun onClick(v: View?) {
       when(v!!.id){
           binding.botonLogin.id->{
               if (!binding.editCorreo.text.toString().isEmpty() &&
                   !binding.editPass.text.toString().isEmpty()){
 
-                  val intent = Intent(applicationContext, MainActivity::class.java)
-                  intent.putExtra("correo", binding.editCorreo.text.toString())
-                  startActivity(intent)
+                  authFirebase.signInWithEmailAndPassword(
+                  binding.editCorreo.text.toString(),
+                  binding.editPass.text.toString()
+                  ).addOnCompleteListener {
+                      if (it.isSuccessful) {
+                          val intent = Intent(applicationContext, MainActivity::class.java)
+                          intent.putExtra("correo", binding.editCorreo.text.toString())
+                          intent.putExtra("uid", authFirebase.currentUser?.uid)
+                          startActivity(intent)
+                      } else {
+                          Snackbar.make(binding.root, "Fallo en los datos", Snackbar.LENGTH_SHORT)
+                              .show()
+                      }
+                  }
 
               }
 
 
           }
           binding.botonSignUp.id->{
-              val intent = Intent(applicationContext,SignupActivity::class.java)
+
+              //Crear una cuenta de usuario
+              /*authFirebase.createUserWithEmailAndPassword("paula1@utad.com", "Utad2024")
+                  .addOnCompleteListener{
+                      if (it.isSuccessful)
+                      {
+
+                          userAuth = authFirebase.currentUser
+
+                          Snackbar.make(binding.root, "Usuario registrado con exito con UID ${userAuth.uid}", Snackbar.LENGTH_SHORT).show()
+                      }else{
+                          Snackbar.make(binding.root, "Fallo en el proceso", Snackbar.LENGTH_SHORT)
+                              .setAction("ok") {
+                              val intent = Intent(applicationContext,SignupActivity::class.java)
+                              startActivity(intent)
+                              finish()}.show()
+                      }
+                  }
+
+              )*/
+
+              val intent = Intent(applicationContext, SignupActivity::class.java)
               startActivity(intent)
               finish()
           }
