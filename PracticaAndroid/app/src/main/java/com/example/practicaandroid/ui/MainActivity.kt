@@ -9,6 +9,8 @@ import com.android.volley.toolbox.Volley
 import com.example.practicaandroid.adapters.AdaptadorProducto
 import com.example.practicaandroid.databinding.ActivityMainBinding
 import com.example.practicaandroid.model.Producto
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
@@ -18,6 +20,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adaptadorProducto: AdaptadorProducto
     private lateinit var nombre: String
+    private lateinit var authFirebase: FirebaseAuth
+    private var userAuth: FirebaseUser? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +72,7 @@ class MainActivity : AppCompatActivity() {
     fun instancias() {
 
         adaptadorProducto = AdaptadorProducto(this)
+        authFirebase = FirebaseAuth.getInstance()
 
     }
 
