@@ -32,7 +32,9 @@ class SignupActivity: AppCompatActivity() {
                 && (binding.editPass.text.toString()
                     .equals(binding.editPass2.text.toString()))
             ) {
+
                 // si todos los datos estan completos -> paso de pantalla
+                val perfil: String = binding.spinnerPerfil.selectedItem.toString()
 
                 val radioSeleccionado: RadioButton =
                     findViewById(binding.radioGroup.checkedRadioButtonId)
@@ -44,6 +46,7 @@ class SignupActivity: AppCompatActivity() {
                         binding.editCorreo.text.toString(),
                         binding.editPass.text.toString().toString(),
                         genero,
+                        perfil
                     )
 
                 authFirebase.createUserWithEmailAndPassword(usuario.correo, usuario.pass)

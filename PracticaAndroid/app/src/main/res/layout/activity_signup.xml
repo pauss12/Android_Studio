@@ -76,6 +76,16 @@
         app:layout_constraintStart_toStartOf="@+id/textoRegistro"
         app:layout_constraintTop_toBottomOf="@id/editPass2" />
 
+    <Spinner
+        android:id="@+id/spinnerPerfil"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:entries="@array/perfiles"
+        app:layout_constraintEnd_toEndOf="@+id/editCorreo"
+        app:layout_constraintStart_toStartOf="@+id/editCorreo"
+        app:layout_constraintTop_toBottomOf="@+id/editCorreo" />
+
 
     <RadioGroup
         android:id="@+id/radioGroup"
@@ -83,8 +93,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="@+id/editCorreo"
-        app:layout_constraintTop_toBottomOf="@+id/editCorreo">
+        app:layout_constraintEnd_toEndOf="@+id/spinnerPerfil"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPerfil">
 
         <RadioButton
             android:id="@+id/radioMasculino"
