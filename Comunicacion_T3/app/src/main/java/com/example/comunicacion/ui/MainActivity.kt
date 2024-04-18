@@ -130,7 +130,6 @@ class MainActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_item,
             DataSet.getAllMarcas()
         )
-        //adaptadorModelo = AdaptadorModelo(DataSet.getAllModelos("Mercedes"), this)
 
         adaptadorProducto = AdaptadorProducto(this)
     }
@@ -156,9 +155,3 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
-
-/*
-* Clase Modelo: marca (s), modelo (s), cv (int), precio (d), imagen (int)
-* */
-
-
