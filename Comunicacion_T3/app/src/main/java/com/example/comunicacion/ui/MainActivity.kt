@@ -5,24 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.View.OnClickListener
-import android.widget.AbsSpinner
-import android.widget.Adapter
 import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.Orientation
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.example.comunicacion.R
-import com.example.comunicacion.adapters.AdaptadorModelo
 import com.example.comunicacion.adapters.AdaptadorProducto
 import com.example.comunicacion.data.DataSet
-import com.example.comunicacion.databinding.ActivityLoginBinding
 import com.example.comunicacion.databinding.ActivityMainBinding
 import com.example.comunicacion.model.Marca
 import com.example.comunicacion.model.Producto
@@ -34,7 +25,6 @@ import org.json.JSONObject
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    //private lateinit var adaptadorModelo: AdaptadorModelo
     private lateinit var adaptadorProducto: AdaptadorProducto
     private lateinit var uidCurrentUser: String
     private lateinit var nombre: String
@@ -72,12 +62,6 @@ class MainActivity : AppCompatActivity() {
             {
                 val producto: JSONObject = productos.getJSONObject(i)
 
-                /*val id = producto.getInt("id")
-                val title = producto.getString("title")
-                val description = producto.getString("description")
-                val thumbnail = producto.getString("thumbnail")
-                val productoOBJ: Producto = (id, title, description, thumbnail, category, price)*/
-
                 val productoOBJ: Producto = Gson().fromJson(producto.toString(), Producto::class.java)
 
                 adaptadorProducto.addProducto(productoOBJ)
@@ -103,11 +87,6 @@ class MainActivity : AppCompatActivity() {
             ) {
 
                 val selecccion: Marca = parent!!.adapter.getItem(position) as Marca
-
-                // filtrar la lista -> DATASET OK
-                // cambiar la lista -> ADAPTADOR
-                //adaptadorModelo.cambiarLista(DataSet.getAllModelos(selecccion.nombre))
-
 
                 Snackbar.make(
                     binding.root,
@@ -136,6 +115,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun persoAdaptadores() {
+
         // junta parte grafica con parte logica
         binding.spinnerSeleccion.adapter = adapterSpinner;
         // muestra el desplegable de forma visible
@@ -149,9 +129,6 @@ class MainActivity : AppCompatActivity() {
                 GridLayoutManager(this, 2)
         }
 
-        //GridLayoutManager(this,2)
-
-        //LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
 
 }
