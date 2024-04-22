@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun acciones() {
+
         binding.spinnerSeleccion.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
