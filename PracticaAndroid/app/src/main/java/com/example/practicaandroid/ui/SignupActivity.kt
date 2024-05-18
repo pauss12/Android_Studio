@@ -8,12 +8,14 @@ import com.example.practicaandroid.databinding.ActivitySignupBinding
 import com.example.practicaandroid.model.Usuario
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 class SignupActivity: AppCompatActivity() {
 
 
     private lateinit var authFirebase: FirebaseAuth
-    private lateinit var binding: ActivitySignupBinding;
+    private lateinit var binding: ActivitySignupBinding
+    private lateinit var firebaseDatabase: FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -42,23 +44,32 @@ class SignupActivity: AppCompatActivity() {
 
                 val usuario =
                     Usuario(
-                        binding.editNombre.text.toString(),
-                        binding.editCorreo.text.toString(),
-                        binding.editPass.text.toString().toString(),
-                        genero,
-                        perfil
+                        nombre = binding.editNombre.text.toString(),
+                        correo = binding.editCorreo.text.toString(),
+                        pass = binding.editPass.text.toString(),
+                        genero = genero,
+                        perfil = perfil
                     )
 
-                authFirebase.createUserWithEmailAndPassword(usuario.correo, usuario.pass)
+                authFirebase.createUserWithEmailAndPassword(usuario.correo!!, usuario.pass!!)
                     .addOnCompleteListener {
-                        if(it.isSuccessful){
-                            Snackbar.make(binding.root,"Usuario registrado con exito", Snackbar.LENGTH_SHORT)
-                                .setAction("ir a login"){
-                                    val intent = Intent(this, LoginActivity::class.java)
+                        if(it.isSuccessful)
+                        {
+                            firebaseDatabase.reference.child("usuarios")
+                                .child(authFirebase.currentUser!!.uid).setValue(usuario)
+                            Snackbar.make(
+                                binding.root,
+                                "Usuario registrado con exito",
+                                Snackbar.LENGTH_SHORT
+                            )
+                                .setAction("ir a login") {
+
+                                    /*val intent = Intent(this, LoginActivity::class.java)
                                     intent.putExtra("usuario",usuario)
-                                    startActivity(intent)
+                                    startActivity(intent)*/
                                 }
                                 .show()
+
                         } else {
                             Snackbar.make(binding.root,"Fallo en el proceso", Snackbar.LENGTH_SHORT)
                                 .show()
@@ -77,6 +88,7 @@ class SignupActivity: AppCompatActivity() {
 
     private fun instancias() {
         authFirebase = FirebaseAuth.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance("https://pmz-utad2024-default-rtdb.europe-west1.firebasedatabase.app/")
     }
 
 
