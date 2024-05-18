@@ -11,7 +11,8 @@ import com.bumptech.glide.Glide
 import com.example.practicaandroid.databinding.ActivityDetallesProductoBinding
 import com.example.practicaandroid.model.Producto
 
-class DetallesProductoActivity : AppCompatActivity() {
+
+class DetallesProductoActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityDetallesProductoBinding
     private var i: Int = 1
