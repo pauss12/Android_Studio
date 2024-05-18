@@ -71,13 +71,6 @@ class MainActivity : AppCompatActivity() {
                         it.child("descrition").value
                         it.child("thumbnail").value
                         it.child("category").value
-                        // val producto: Producto = Gson().fromJson(it.value.toString(), Producto::class.java)
-                        // Log.v("datos",it.value.toString())
-                        // Log.v("datos",producto.title.toString())
-                        /*val datos: Iterable<DataSnapshot> = it.children
-                        datos.forEach {
-                             Log.v("datos",it.value.toString())
-                        }*/
 
                     }
                 }
@@ -106,11 +99,9 @@ class MainActivity : AppCompatActivity() {
             for ( i in 0..< recetas.length())
             {
                 val recipe: JSONObject = recetas.getJSONObject(i)
-
                 val recipeOBJ: Producto = Gson().fromJson(recipe.toString(), Producto::class.java)
 
                 adaptadorProducto.addProducto(recipeOBJ)
-
                 Log.v("dats", "${recipeOBJ.id} ${recipeOBJ.name}")
             }
 
@@ -141,7 +132,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    //
+    // FUNCIONES PARA EL MENU --------------------------------------------------------------------------
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
@@ -164,13 +155,11 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_get_nodo -> {
                 // obtener informacion sobre el nodo con UUID EMQ2zlGUt8VMITrTDToBfOIdWuy2
                 firebaseDatabase.reference.child("usuarios")
-                    //.child("sDaBw4hL7Nci678DffHVMU5KzVH2")
                     .addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            //Log.v("datos", snapshot.value.toString())
+
                             val iterable: Iterable<DataSnapshot> = snapshot.children
                             iterable.forEach {
-                                // it.value.toString() -> {nombre: Borja, genero: Masculino, perfil: Administrador, correo:borja@utad.com}
                                 val usuario: Usuario =
                                     Gson().fromJson(it.value.toString(), Usuario::class.java)
                                 Log.v("datos", usuario.nombre.toString())
@@ -183,16 +172,6 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     })
-                /*.addListenerForSingleValueEvent(object : ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        // snapshot es estado actual del nodo por el que pregunto
-                        Log.v("datos", snapshot.value.toString())
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-
-                    }
-                })*/
             }
         }
 
