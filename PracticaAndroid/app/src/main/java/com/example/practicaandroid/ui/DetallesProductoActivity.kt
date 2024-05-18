@@ -43,7 +43,7 @@ class DetallesProductoActivity: AppCompatActivity() {
 
         //Poner el titulo de "Ingredientes" en negrita
         ingredientList.setSpan(StyleSpan(Typeface.BOLD), 0, 14, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        for (ingredient in producto.ingredients) {
+        for (ingredient in producto.ingredients!!) {
             ingredientList.append(" • $ingredient\n")
         }
 
@@ -54,7 +54,7 @@ class DetallesProductoActivity: AppCompatActivity() {
 
         //Poner el titulo de "Pasos" en negrita
         listaPasos.setSpan(StyleSpan(Typeface.BOLD), 0, 7  , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        for (paso in producto.instructions) {
+        for (paso in producto.instructions!!) {
             listaPasos.append(" $i. $paso\n\n")
             i++;
         }
