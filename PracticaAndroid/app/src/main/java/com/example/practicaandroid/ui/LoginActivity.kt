@@ -1,13 +1,17 @@
 package com.example.practicaandroid.ui
 
-
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.view.View.OnClickListener
+import com.example.practicaandroid.R
 import com.example.practicaandroid.databinding.ActivityLoginBinding
 import com.example.practicaandroid.model.Usuario
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 
 class LoginActivity : AppCompatActivity(), OnClickListener {
@@ -15,6 +19,8 @@ class LoginActivity : AppCompatActivity(), OnClickListener {
 
     private lateinit var binding: ActivityLoginBinding
     private var usuario: Usuario? = null
+    private lateinit var authFirebase: FirebaseAuth
+    private var userAuth: FirebaseUser? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -22,6 +28,7 @@ class LoginActivity : AppCompatActivity(), OnClickListener {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        instancias()
 
         if (intent.getSerializableExtra("usuario") != null) {
             usuario = intent.getSerializableExtra("usuario") as Usuario
@@ -34,6 +41,11 @@ class LoginActivity : AppCompatActivity(), OnClickListener {
 
     }
 
+    fun instancias()
+    {
+        authFirebase = FirebaseAuth.getInstance()
+    }
+
     override fun onClick(v: View?) {
         when (v!!.id) {
 
@@ -43,11 +55,24 @@ class LoginActivity : AppCompatActivity(), OnClickListener {
                     !binding.editPass.text.toString().isEmpty()
                 ) {
 
-                    val intent = Intent(applicationContext, MainActivity::class.java)
+                    authFirebase.signInWithEmailAndPassword(
+                        binding.editCorreo.text.toString(),
+                        binding.editPass.text.toString()
+                    ).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            val intent = Intent(applicationContext, MainActivity::class.java)
+                            intent.putExtra("correo", binding.editCorreo.text.toString())
+                            intent.putExtra("uid", authFirebase.currentUser?.uid)
+                            startActivity(intent)
+                        } else {
+                            Snackbar.make(binding.root, "Fallo en los datos", Snackbar.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
 
+                    /*val intent = Intent(applicationContext, MainActivity::class.java)
                     intent.putExtra("correo", binding.editCorreo.text.toString())
-
-                    startActivity(intent)
+                    startActivity(intent)*/
 
                 }
 
@@ -63,5 +88,12 @@ class LoginActivity : AppCompatActivity(), OnClickListener {
             }
 
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.help_menu, menu)
+
+        return true
     }
 }

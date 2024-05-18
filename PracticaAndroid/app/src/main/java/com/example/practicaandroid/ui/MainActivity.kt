@@ -3,14 +3,23 @@ package com.example.practicaandroid.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.practicaandroid.R
 import com.example.practicaandroid.adapters.AdaptadorProducto
 import com.example.practicaandroid.databinding.ActivityMainBinding
 import com.example.practicaandroid.model.Producto
+import com.example.practicaandroid.model.Usuario
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
@@ -18,11 +27,17 @@ import org.json.JSONObject
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
     private lateinit var adaptadorProducto: AdaptadorProducto
     private lateinit var nombre: String
-    private lateinit var authFirebase: FirebaseAuth
-    private var userAuth: FirebaseUser? = null
 
+    private lateinit var firebaseDatabase: FirebaseDatabase
+    private lateinit var uidCurrentUser: String
+    private lateinit var databaseReference: DatabaseReference
+
+    // referencia -> nodo sobre el cual me puedo colocar y trabajar de ahi en adelante
+    // child -> todos los nodos. Si hago referencia a un nodo que no existe, se crea automaticamente
+    // value -> dato asociado a un nodo. Si el nodo existe y se le da un valor nuevo -> update
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -30,18 +45,56 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        peticionJSON()
-
         instancias()
-
+        peticionFirebase()
         persoAdaptadores()
+        peticionJSON()
 
         this.nombre = intent.getStringExtra("correo")!!
         binding.textoSaludo.text = "Bienvenido $nombre ;) "
 
+        this.uidCurrentUser = intent.getStringExtra("uid")!!
+        binding.textoSaludo.text = nombre
 
     }
 
+    //PETICION FIREBASE ------------------------------------------------------------------------------
+    private fun peticionFirebase() {
+
+        firebaseDatabase.reference.child("productos")
+            .child("products")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.children.forEach {
+                        it.child("title").value
+                        it.child("price").value
+                        it.child("descrition").value
+                        it.child("thumbnail").value
+                        it.child("category").value
+                        // val producto: Producto = Gson().fromJson(it.value.toString(), Producto::class.java)
+                        // Log.v("datos",it.value.toString())
+                        // Log.v("datos",producto.title.toString())
+                        /*val datos: Iterable<DataSnapshot> = it.children
+                        datos.forEach {
+                             Log.v("datos",it.value.toString())
+                        }*/
+
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+        // 1-  consultar a la base datos los productos y pintarlos en el RecyclerView
+
+        // 2- Cambiarle el precio a cualquier producto de la base de datos ¿?¿?¿?¿?
+
+
+    }
+
+    //PETICION JSON ------------------------------------------------------------------------------------
     private fun peticionJSON() {
 
         val url = "https://dummyjson.com/recipes"
@@ -58,7 +111,7 @@ class MainActivity : AppCompatActivity() {
 
                 adaptadorProducto.addProducto(recipeOBJ)
 
-                //Log.v("dats", "${recipeOBJ.id} ${recipeOBJ.name}")
+                Log.v("dats", "${recipeOBJ.id} ${recipeOBJ.name}")
             }
 
         }, {
@@ -69,14 +122,16 @@ class MainActivity : AppCompatActivity() {
         Volley.newRequestQueue(applicationContext).add(peticion)
     }
 
+    //INSTACIAS ----------------------------------------------------------------------------------------
     fun instancias() {
 
         adaptadorProducto = AdaptadorProducto(this)
-        authFirebase = FirebaseAuth.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance("https://practicaandroid-e9d77-default-rtdb.firebaseio.com/")
 
     }
 
 
+    //PERO ADAPTADORES -------------------------------------------------------------------------------
     fun persoAdaptadores() {
 
         binding.recyclerModelos.adapter = adaptadorProducto
@@ -84,6 +139,64 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerModelos.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
+    }
+
+    //
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.menu_add_nodo -> {
+                databaseReference = firebaseDatabase.reference.child("usuarios").child("uid")
+                databaseReference
+                    .child("usuario2").setValue("usuario1")
+            }
+
+            R.id.menu_del_nodo -> {
+                firebaseDatabase.reference.child("usuarios")
+                    .child("usuario2").setValue(null)
+            }
+
+            R.id.menu_get_nodo -> {
+                // obtener informacion sobre el nodo con UUID EMQ2zlGUt8VMITrTDToBfOIdWuy2
+                firebaseDatabase.reference.child("usuarios")
+                    //.child("sDaBw4hL7Nci678DffHVMU5KzVH2")
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            //Log.v("datos", snapshot.value.toString())
+                            val iterable: Iterable<DataSnapshot> = snapshot.children
+                            iterable.forEach {
+                                // it.value.toString() -> {nombre: Borja, genero: Masculino, perfil: Administrador, correo:borja@utad.com}
+                                val usuario: Usuario =
+                                    Gson().fromJson(it.value.toString(), Usuario::class.java)
+                                Log.v("datos", usuario.nombre.toString())
+                            }
+
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+
+                    })
+                /*.addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        // snapshot es estado actual del nodo por el que pregunto
+                        Log.v("datos", snapshot.value.toString())
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+                })*/
+            }
+        }
+
+        return true
     }
 
 }
