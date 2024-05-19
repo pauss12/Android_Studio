@@ -7,6 +7,8 @@ class Usuario(
     var correo: String?=null,
     var pass: String?=null,
     var genero: String?=null,
-    var perfil: String?=null
+    var perfil: String?=null,
+    var recetas: Map<String, Producto>?
+
 ) : Serializable {
 }
