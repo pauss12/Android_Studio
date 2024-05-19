@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="32dp"
+    tools:context=".ui.LoginActivity"
     >
 
     <ImageView
@@ -23,8 +24,8 @@
         android:hint="Por favor introduce tu correo"
         android:id="@+id/editCorreo"
         android:gravity="center"
-        android:drawableLeft="@drawable/user"
-        />
+        android:drawableLeft="@drawable/user" />
+
     <EditText
         android:layout_marginTop="12dp"
         android:layout_width="match_parent"
@@ -33,8 +34,8 @@
         android:id="@+id/editPass"
         android:gravity="center"
         android:drawableLeft="@drawable/pass"
-        android:inputType="textPassword"
-        />
+        android:inputType="textPassword" />
+
     <Button
         android:layout_marginTop="32dp"
         android:layout_width="wrap_content"
