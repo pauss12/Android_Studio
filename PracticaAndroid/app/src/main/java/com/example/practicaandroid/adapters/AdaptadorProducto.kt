@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,9 +13,10 @@ import com.bumptech.glide.Glide
 import com.example.practicaandroid.R
 import com.example.practicaandroid.model.Producto
 import com.example.practicaandroid.ui.DetallesProductoActivity
+import com.google.firebase.database.FirebaseDatabase
 
 
-class AdaptadorProducto(var context: Context) :  RecyclerView.Adapter<AdaptadorProducto.MyHolder>() {
+class AdaptadorProducto(var context: Context, private val uidUsuario: String) :  RecyclerView.Adapter<AdaptadorProducto.MyHolder>() {
 
     var lista: ArrayList<Producto> = ArrayList()
     class MyHolder(item: View) : RecyclerView.ViewHolder(item) {
@@ -51,9 +53,27 @@ class AdaptadorProducto(var context: Context) :  RecyclerView.Adapter<AdaptadorP
             intent.putExtra("producto", elemento)
             context.startActivity(intent)
         }
+
+        //Si le da al boton de "añadir al carrito", que lo meta dentro de la variable "recetas" del usuario que esta logeado
+        holder.itemView.findViewById<Button>(R.id.addActividadCarrito).setOnClickListener {
+
+            val referenciaUsuario = FirebaseDatabase.getInstance().getReference("usuarios").child(uidUsuario)
+
+            referenciaUsuario.child("recetas").child(elemento.id.toString()).setValue(elemento)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Producto añadido correctamente al carrito del usuario
+                        // Puedes mostrar un mensaje de éxito si lo deseas
+                    } else {
+                        // Ocurrió un error al añadir el producto al carrito
+                        // Puedes mostrar un mensaje de error si lo deseas
+                    }
+                }
+        }
+
     }
 
-    fun addProducto(x: Producto)
+    fun addProducto(x: Producto, uidCurrentUser: String)
     {
         lista.add(x)
         notifyItemInserted(lista.size - 1)

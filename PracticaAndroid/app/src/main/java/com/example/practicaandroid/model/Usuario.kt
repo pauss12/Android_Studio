@@ -8,7 +8,7 @@ class Usuario(
     var pass: String?=null,
     var genero: String?=null,
     var perfil: String?=null,
-    var recetas: Map<String, Producto>?
+    var recetas: Map<String, Producto>?=null
 
 ) : Serializable {
 }

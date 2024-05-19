@@ -38,8 +38,16 @@ class SignupActivity: AppCompatActivity() {
                 // si todos los datos estan completos -> paso de pantalla
                 val perfil: String = binding.spinnerPerfil.selectedItem.toString()
 
+                //Comprobar si ha seleccionado alguna opcion
+                val radioButtonId = binding.radioGroup.checkedRadioButtonId
+                if (radioButtonId == -1) {
+                    Snackbar.make(binding.root, "Debes seleccionar un género", Snackbar.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
                 val radioSeleccionado: RadioButton =
                     findViewById(binding.radioGroup.checkedRadioButtonId)
+
                 val genero = radioSeleccionado.text.toString();
 
                 val usuario =
@@ -48,7 +56,7 @@ class SignupActivity: AppCompatActivity() {
                         correo = binding.editCorreo.text.toString(),
                         genero = genero,
                         perfil = perfil,
-                        recetas = null
+                        recetas = mutableMapOf()
                     )
 
                 authFirebase.createUserWithEmailAndPassword(

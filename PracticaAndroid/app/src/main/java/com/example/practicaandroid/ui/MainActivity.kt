@@ -13,8 +13,6 @@ import com.example.practicaandroid.adapters.AdaptadorProducto
 import com.example.practicaandroid.databinding.ActivityMainBinding
 import com.example.practicaandroid.model.Producto
 import com.example.practicaandroid.model.Usuario
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -95,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 val recipe: JSONObject = recetas.getJSONObject(i)
                 val recipeOBJ: Producto = Gson().fromJson(recipe.toString(), Producto::class.java)
 
-                adaptadorProducto.addProducto(recipeOBJ)
+                adaptadorProducto.addProducto(recipeOBJ, this.uidCurrentUser)
 
                 val productId = databaseReference.push().key
                 if (productId != null) {
@@ -116,7 +114,7 @@ class MainActivity : AppCompatActivity() {
     //INSTACIAS ----------------------------------------------------------------------------------------
     fun instancias() {
 
-        adaptadorProducto = AdaptadorProducto(this)
+        adaptadorProducto = AdaptadorProducto(this, "")
         firebaseDatabase = FirebaseDatabase.getInstance("https://practicaandroid-e9d77-default-rtdb.firebaseio.com/")
         databaseReference = firebaseDatabase.reference.child("recipes")
     }
