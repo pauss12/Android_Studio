@@ -46,9 +46,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         instancias()
+        peticionJSON()
         peticionFirebase()
         persoAdaptadores()
-        peticionJSON()
+
 
         this.nombre = intent.getStringExtra("correo")!!
         binding.textoSaludo.text = "Bienvenido $nombre ;) "
@@ -61,17 +62,16 @@ class MainActivity : AppCompatActivity() {
     //PETICION FIREBASE ------------------------------------------------------------------------------
     private fun peticionFirebase() {
 
-        firebaseDatabase.reference.child("productos")
-            .child("products")
+        firebaseDatabase.reference.child("recipes")
+            .child("recipes")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     snapshot.children.forEach {
-                        it.child("title").value
-                        it.child("price").value
-                        it.child("descrition").value
-                        it.child("thumbnail").value
-                        it.child("category").value
-
+                        it.child("name").value
+                        it.child("ingredients").value
+                        it.child("instructions").value
+                        it.child("image").value
+                        it.child("rating").value
                     }
                 }
 
@@ -80,11 +80,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
             })
-        // 1-  consultar a la base datos los productos y pintarlos en el RecyclerView
-
-        // 2- Cambiarle el precio a cualquier producto de la base de datos ¿?¿?¿?¿?
-
-
     }
 
     //PETICION JSON ------------------------------------------------------------------------------------
@@ -102,6 +97,12 @@ class MainActivity : AppCompatActivity() {
                 val recipeOBJ: Producto = Gson().fromJson(recipe.toString(), Producto::class.java)
 
                 adaptadorProducto.addProducto(recipeOBJ)
+
+                val productId = databaseReference.push().key
+                if (productId != null) {
+                    databaseReference.child(productId).setValue(recipeOBJ)
+                }
+
                 Log.v("dats", "${recipeOBJ.id} ${recipeOBJ.name}")
             }
 
@@ -118,7 +119,7 @@ class MainActivity : AppCompatActivity() {
 
         adaptadorProducto = AdaptadorProducto(this)
         firebaseDatabase = FirebaseDatabase.getInstance("https://practicaandroid-e9d77-default-rtdb.firebaseio.com/")
-
+        databaseReference = firebaseDatabase.reference.child("recipes")
     }
 
 
