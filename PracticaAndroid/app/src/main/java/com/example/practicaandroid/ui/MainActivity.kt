@@ -46,10 +46,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         instancias()
-        peticionJSON()
         peticionFirebase()
         persoAdaptadores()
-
+        peticionJSON()
 
         this.nombre = intent.getStringExtra("correo")!!
         binding.textoSaludo.text = "Bienvenido $nombre ;) "
