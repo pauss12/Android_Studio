@@ -164,7 +164,6 @@ class MainActivity : AppCompatActivity() {
                                     Gson().fromJson(it.value.toString(), Usuario::class.java)
                                 Log.v("datos", usuario.nombre.toString())
                             }
-
                         }
 
                         override fun onCancelled(error: DatabaseError) {
