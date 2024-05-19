@@ -46,12 +46,15 @@ class SignupActivity: AppCompatActivity() {
                     Usuario(
                         nombre = binding.editNombre.text.toString(),
                         correo = binding.editCorreo.text.toString(),
-                        pass = binding.editPass.text.toString(),
                         genero = genero,
-                        perfil = perfil
+                        perfil = perfil,
+                        recetas = null
                     )
 
-                authFirebase.createUserWithEmailAndPassword(usuario.correo!!, usuario.pass!!)
+                authFirebase.createUserWithEmailAndPassword(
+                    usuario.correo!!,
+                    binding.editPass.text.toString()
+                )
                     .addOnCompleteListener {
                         if(it.isSuccessful)
                         {
@@ -64,9 +67,9 @@ class SignupActivity: AppCompatActivity() {
                             )
                                 .setAction("ir a login") {
 
-                                    /*val intent = Intent(this, LoginActivity::class.java)
-                                    intent.putExtra("usuario",usuario)
-                                    startActivity(intent)*/
+                                    val intent = Intent(this, LoginActivity::class.java)
+                                    intent.putExtra("usuario", usuario)
+                                    startActivity(intent)
                                 }
                                 .show()
 
@@ -81,14 +84,12 @@ class SignupActivity: AppCompatActivity() {
                 // los datos no estan completos pero las pass no coincida -> aviso
                 Snackbar.make(binding.root, "Fallo en el proceso", Snackbar.LENGTH_SHORT).show()
             }
-
         }
-
     }
 
     private fun instancias() {
         authFirebase = FirebaseAuth.getInstance()
-        firebaseDatabase = FirebaseDatabase.getInstance("https://pmz-utad2024-default-rtdb.europe-west1.firebasedatabase.app/")
+        firebaseDatabase = FirebaseDatabase.getInstance("https://practicaandroid-e9d77-default-rtdb.firebaseio.com/")
     }
 
 
