@@ -11,14 +11,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.practicaandroid.R
+import com.example.practicaandroid.databinding.ActivityMainBinding
 import com.example.practicaandroid.model.Producto
 import com.example.practicaandroid.ui.DetallesProductoActivity
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.FirebaseDatabase
 
 
 class AdaptadorProducto(var context: Context, private val uidUsuario: String) :  RecyclerView.Adapter<AdaptadorProducto.MyHolder>() {
 
     var lista: ArrayList<Producto> = ArrayList()
+
     class MyHolder(item: View) : RecyclerView.ViewHolder(item) {
 
         var imagen: ImageView = item.findViewById(R.id.imagenFila)
@@ -62,11 +65,11 @@ class AdaptadorProducto(var context: Context, private val uidUsuario: String) : 
             referenciaUsuario.child("recetas").child(elemento.id.toString()).setValue(elemento)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        // Producto añadido correctamente al carrito del usuario
-                        // Puedes mostrar un mensaje de éxito si lo deseas
+
+                        Snackbar.make(holder.itemView, "Se ha subido a la BBDD", Snackbar.LENGTH_SHORT).show()
+
                     } else {
-                        // Ocurrió un error al añadir el producto al carrito
-                        // Puedes mostrar un mensaje de error si lo deseas
+                        Snackbar.make(holder.itemView, "Ha ocurrido un error!", Snackbar.LENGTH_SHORT).show()
                     }
                 }
         }
